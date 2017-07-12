@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title - Process Tickets Past Due</title>
+    @Styles.Render("~/Content/CSS")
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
+
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/modernizr")
+
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/Content/themes/base/css")
+    @RenderSection("scripts", required: false)
+    <style>
+        div.navbar.navbar-inverse.navbar-fixed-top {
+            background-color: #001489;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0;
+            /*width: 100%;*/
+            height: 15px;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Process Tickets Past Due", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    @if (System.Web.HttpContext.Current.Session["ProcessPastDue"].Equals(1))
+                    {
+                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    }
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+
+
+    </div>
+    <div class="container">
+        <footer class="footer">
+
+            <p style="background-color: lightgray">
+                <strong> Silco Fire & Security</strong><br />
+                Confidential: The information contained in this website and other internal websites and computer systems is confidential information belonging to Silco Fire & Security. <br />
+                Unauthorized use, reproduction, or dissemination of this information is prohibited. <br />
+                513-733-5655 | silcofs.com| &copy; @DateTime.Now.Year
+            </p>
+        </footer>
+    </div>
+    @Styles.Render("~/Content/themes/base/css")
+</body>
+</html>

@@ -1,0 +1,27 @@
+﻿@model  MassInactiveInspections.Models.LoginViewModel
+@{
+    ViewBag.Title = "Enter Ticket Number";
+}
+<style>
+    div.validation-summary-errors ul li {
+        color: black;
+        background-color: red;
+    }
+</style>
+
+<p>Enter a Ticket Number then press the Action button</p>
+@*<div class="row">*@
+  @using (Html.BeginForm("FindTicket", "Home", FormMethod.Post, new { TicketNo = Model }))
+  {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        <fieldset>
+            <div style="margin-top: 50px">
+                 <input type="submit" name="LostButton" value="Lost" />
+                 <input type="submit" name="OOBButton" value="OOB" />
+                 <input type="submit" name="RefusedButton" value="Refused" />
+                  <input type="submit" name="DoneButton" value="Done" />
+            </div>
+        </fieldset>
+    }
