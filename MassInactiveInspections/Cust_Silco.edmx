@@ -5,6 +5,9 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="Cust_SilcoModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <Function Name="DoesCustomerNumberExist" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Customer_Number" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="FindSecurityMassInact" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="appid" Type="int" Mode="In" />
           <Parameter Name="title" Type="varchar" Mode="In" />
@@ -13,6 +16,9 @@
         </Function>
         <Function Name="GetADGroups" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="pappid" Type="int" Mode="In" />
+        </Function>
+        <Function Name="GetCustomerInspectionInformation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Customer_Number" Type="varchar" Mode="In" />
         </Function>
         <EntityContainer Name="Cust_SilcoModelStoreContainer" />
       </Schema></edmx:StorageModels>
@@ -27,7 +33,13 @@
             <Parameter Name="account" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="GetADGroups" ReturnType="Collection(Cust_SilcoModel.GetADGroups_Result)">
-            <Parameter Name="pappid" Mode="In" Type="Int32" />
+          <Parameter Name="pappid" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="DoesCustomerNumberExist" ReturnType="Collection(Cust_SilcoModel.DoesCustomerNumberExist_Result)">
+          <Parameter Name="Customer_Number" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetCustomerInspectionInformation" ReturnType="Collection(Cust_SilcoModel.GetCustomerInspectionInformation_Result)">
+          <Parameter Name="Customer_Number" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="FindSecurityMassInact_Result">
@@ -35,6 +47,21 @@
         </ComplexType>
         <ComplexType Name="GetADGroups_Result">
           <Property Type="String" Name="adsecuritygroupallowed" Nullable="true" MaxLength="30" />
+        </ComplexType>
+        <ComplexType Name="DoesCustomerNumberExist_Result">
+          <Property Type="Int32" Name="Does_Exist" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="GetCustomerInspectionInformation_Result">
+          <Property Type="String" Name="Customer_Number" Nullable="false" MaxLength="15" />
+          <Property Type="String" Name="Customer_Name" Nullable="true" MaxLength="60" />
+          <Property Type="String" Name="Site_Number" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Business_Name" Nullable="false" MaxLength="60" />
+          <Property Type="String" Name="System_Code" Nullable="false" MaxLength="25" />
+          <Property Type="String" Name="Inspection_Cycle_Description" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Last_Inspection_Date" Nullable="true" />
+          <Property Type="Int32" Name="Route_ID" Nullable="true" />
+          <Property Type="String" Name="Route_Code" Nullable="true" MaxLength="25" />
+          <Property Type="String" Name="Active" Nullable="true" MaxLength="1" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -56,6 +83,29 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="DoesCustomerNumberExist" FunctionName="Cust_SilcoModel.Store.DoesCustomerNumberExist" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Cust_SilcoModel.DoesCustomerNumberExist_Result">
+                <ScalarProperty Name="Does_Exist" ColumnName="Does Exist" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetCustomerInspectionInformation" FunctionName="Cust_SilcoModel.Store.GetCustomerInspectionInformation">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Cust_SilcoModel.GetCustomerInspectionInformation_Result">
+                <ScalarProperty Name="Customer_Number" ColumnName="Customer Number" />
+                <ScalarProperty Name="Customer_Name" ColumnName="Customer Name" />
+                <ScalarProperty Name="Site_Number" ColumnName="Site Number" />
+                <ScalarProperty Name="Business_Name" ColumnName="Business Name" />
+                <ScalarProperty Name="System_Code" ColumnName="System Code" />
+                <ScalarProperty Name="Inspection_Cycle_Description" ColumnName="Inspection Cycle Description" />
+                <ScalarProperty Name="Last_Inspection_Date" ColumnName="Last Inspection Date" />
+                <ScalarProperty Name="Route_ID" ColumnName="Route ID" />
+                <ScalarProperty Name="Route_Code" ColumnName="Route Code" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -70,8 +120,8 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="true" />
-        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>

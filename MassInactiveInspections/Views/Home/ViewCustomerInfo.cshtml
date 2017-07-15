@@ -1,0 +1,104 @@
+﻿@model MassInactiveInspections.Models.CustomerInfoList
+@{
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+    ViewBag.Title = "Customer Table:";
+}
+@*<script src="http://10.0.0.183:8080/target/target-script-min.js#anonymous"></script>*@
+
+@*@Url.RouteUrl("DefaultApi", new { httproute = "\", controller = \"Account" });*@
+
+
+<div class="container">
+    <h2>@ViewBag.Title</h2>
+    <div class="bs-callout bs-callout-info" style="margin-bottom: 0px;">
+    </div>
+    <div class="col-md-8">
+        <section id="loginForm">
+            @using (Html.BeginForm("ViewCustomerInfo", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                <hr />
+                @Html.ValidationSummary(true)
+
+                <div>
+                    <table class="table">
+                        <tr>
+                            <th>
+                                Active
+                            </th>
+                            <th>
+                                Business Name
+                            </th>
+                            <th>
+                                Customer Name
+                            </th>
+                            <th>
+                                Customer Number
+                            </th>
+                            <th>
+                                Inspection Cycle Description
+                            </th>
+                            <th>
+                                Last Inspection Date
+                            </th>
+                            <th>
+                                Route Code
+                            </th>
+                            <th>
+                                Route ID
+                            </th>
+                            <th>
+                                Site Number
+                            </th>
+                            <th>
+                                System Code
+                            </th>
+                        </tr>
+
+                        @foreach (var item in Model.CustomerInfoListView)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Active)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.BusinessName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CustomerName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CustomerNumber)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.InspectionCycleDescription)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.LastInspectionDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RouteCode)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RouteID)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SiteNumber)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SystemCode)
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            }
+        </section>
+    </div>
+</div>
+
+
+
+
+
+

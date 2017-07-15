@@ -75,7 +75,7 @@ namespace MassInactiveInspections.Controllers
         {
 
             //    ActionResult result = View("LogOn");
-            System.Web.HttpContext.Current.Session["ProcessPastDue"] = 0;
+            System.Web.HttpContext.Current.Session["ProcessMassEnact"] = 0;
             ActionResult result = View("Login");
             UserInfo user = _userRepository.Authenticate(model.UserName, model.Password);
 
@@ -105,7 +105,7 @@ namespace MassInactiveInspections.Controllers
                         {
                             foreach (var sc in seclist)
                             {
-                                System.Web.HttpContext.Current.Session["MassInact"] = sc.canprocessmassinact;
+                                System.Web.HttpContext.Current.Session["ProcessMassEnact"] = sc.canprocessmassinact;
                                 //System.Web.HttpContext.Current.Session["CanViewProspects"] = sc.canviewprospects.Value;
                                 //System.Web.HttpContext.Current.Session["CanViewSiteLookup"] = sc.canviewmaster.Value;
                                 //System.Web.HttpContext.Current.Session["CanViewPR"] = sc.canviewpr.Value;
@@ -115,7 +115,7 @@ namespace MassInactiveInspections.Controllers
                         }
                         else
                         {
-                            System.Web.HttpContext.Current.Session["ProcessPastDue"] = 0;
+                            System.Web.HttpContext.Current.Session["ProcessMassEnact"] = 0;
                             //System.Web.HttpContext.Current.Session["CanViewProspects"] = 0;
                             //System.Web.HttpContext.Current.Session["CanViewSiteLookup"] = 0;
                             //System.Web.HttpContext.Current.Session["CanViewPR"] = 0;
@@ -130,6 +130,7 @@ namespace MassInactiveInspections.Controllers
                         if (returnUrl == null)
                         {
                             result = RedirectToAction("Index", "Home");
+                           
                         }
                         else
                         {

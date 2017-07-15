@@ -52,6 +52,43 @@ namespace MassInactiveInspections.Models
             return seclist;
         }
 
+        public static List<DoesCustomerNumberExist_Result> ExistingCustomerNumber<T>( string results) where T : class
+        {
+
+            var sb = new Cust_SilcoEntities();
+
+            List<DoesCustomerNumberExist_Result> seclist = sb.DoesCustomerNumberExist(results).ToList();
+            return seclist;
+        }
+
+        public static List<GetCustomerInspectionInformation_Result> GetCustomerInspectionInfo<T>(string customerNumber) where T : class
+        {
+
+            var sb = new Cust_SilcoEntities();
+
+            List<GetCustomerInspectionInformation_Result> seclist = sb.GetCustomerInspectionInformation(customerNumber).ToList();
+            return seclist;
+        }
+
+        //public static int ExistingCustomerNumber(string customerNumber)
+        //{
+        //    var sb = new Cust_SilcoEntities();
+
+        //    var custnum = sb.DoesCustomerNumberExist(customerNumber);
+
+        //    return 0;
+        //}
+
+        //public static List<> ExistingCustomer<T>(string customer) where T : class
+        //{
+
+        //    var sb = new Cust_SilcoEntities();
+
+        //    List<DoesCustomerNumberExist_Result> cust = sb.DoesCustomerNumberExist(customer).ToList();
+
+        //    return cust;
+        //}
+
     }
 }
 

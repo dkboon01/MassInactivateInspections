@@ -39,11 +39,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Process Tickets Past Due", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Mass Inact", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    @if (System.Web.HttpContext.Current.Session["ProcessPastDue"].Equals(1))
+                    @if (System.Web.HttpContext.Current.Session["ProcessMassEnact"].Equals(1))
                     {
                         <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     }

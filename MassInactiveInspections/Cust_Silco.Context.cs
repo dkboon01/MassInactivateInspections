@@ -57,5 +57,23 @@ namespace MassInactiveInspections
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetADGroups_Result>("GetADGroups", pappidParameter);
         }
+    
+        public virtual ObjectResult<DoesCustomerNumberExist_Result> DoesCustomerNumberExist(string customer_Number)
+        {
+            var customer_NumberParameter = customer_Number != null ?
+                new ObjectParameter("Customer_Number", customer_Number) :
+                new ObjectParameter("Customer_Number", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<DoesCustomerNumberExist_Result>("DoesCustomerNumberExist", customer_NumberParameter);
+        }
+    
+        public virtual ObjectResult<GetCustomerInspectionInformation_Result> GetCustomerInspectionInformation(string customer_Number)
+        {
+            var customer_NumberParameter = customer_Number != null ?
+                new ObjectParameter("Customer_Number", customer_Number) :
+                new ObjectParameter("Customer_Number", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCustomerInspectionInformation_Result>("GetCustomerInspectionInformation", customer_NumberParameter);
+        }
     }
 }
