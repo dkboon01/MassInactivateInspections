@@ -6,6 +6,31 @@ namespace MassInactiveInspections
     public class BundleConfig
     {
         // For more information on bundling, visit https://go.microsoft.com/fwlink/?LinkId=301862
+        //public static void RegisterBundles(BundleCollection bundles)
+        //{
+        //    bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
+        //                "~/Scripts/jquery-1.10.2.min.js"));
+
+        //    bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
+        //                "~/Scripts/bootstrap.min.js"));
+
+        //    bundles.Add(new ScriptBundle("~/bundles/datatables").Include(
+        //                "~/Scripts/Datatables/jquery.dataTables.min.js",
+        //                "~/Scripts/Datatables/dataTables.bootstrap.min.js",
+        //                "~/Scripts/Datatables/dataTables.colReorder.min.js"));
+
+        //    bundles.Add(new StyleBundle("~/Content/css").Include(
+        //              "~/Content/bootstrap.min.css",
+        //              "~/Content/bootstrap-theme.min.css",
+        //              "~/Content/bootstrap.min.css",
+        //              "~/Content/DataTables/css/jquery.dataTables.min.css",
+        //              "~/Content/DataTables/css/jquery.dataTables_themeroller.css",
+        //              "~/Content/DataTables/css/colReorder.bootstrap.css",
+        //              "~/Content/DataTables/css/site.css"));
+        //}
+
+
+
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
