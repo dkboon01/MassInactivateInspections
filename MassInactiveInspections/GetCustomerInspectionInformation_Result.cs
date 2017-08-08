@@ -18,9 +18,11 @@ namespace MassInactiveInspections
         public string Site_Number { get; set; }
         public string Business_Name { get; set; }
         public string System_Code { get; set; }
+        public int Customer_System_ID { get; set; }
         public string Inspection_Cycle_Description { get; set; }
         public string Last_Inspection_Date { get; set; }
         public Nullable<int> Route_ID { get; set; }
+        public int Inspection_ID { get; set; }
         public string Route_Code { get; set; }
         public string Active { get; set; }
     }

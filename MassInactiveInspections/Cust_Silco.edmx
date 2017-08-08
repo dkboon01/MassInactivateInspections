@@ -39,7 +39,7 @@
           <Parameter Name="Customer_Number" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="GetCustomerInspectionInformation" ReturnType="Collection(Cust_SilcoModel.GetCustomerInspectionInformation_Result)">
-          <Parameter Name="Customer_Number" Mode="In" Type="String" />
+            <Parameter Name="Customer_Number" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <ComplexType Name="FindSecurityMassInact_Result">
@@ -57,9 +57,11 @@
           <Property Type="String" Name="Site_Number" Nullable="true" MaxLength="20" />
           <Property Type="String" Name="Business_Name" Nullable="false" MaxLength="60" />
           <Property Type="String" Name="System_Code" Nullable="false" MaxLength="25" />
+          <Property Type="Int32" Name="Customer_System_ID" Nullable="false" />
           <Property Type="String" Name="Inspection_Cycle_Description" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="Last_Inspection_Date" Nullable="true" />
           <Property Type="Int32" Name="Route_ID" Nullable="true" />
+          <Property Type="Int32" Name="Inspection_ID" Nullable="false" />
           <Property Type="String" Name="Route_Code" Nullable="true" MaxLength="25" />
           <Property Type="String" Name="Active" Nullable="true" MaxLength="1" />
         </ComplexType>
@@ -98,9 +100,11 @@
                 <ScalarProperty Name="Site_Number" ColumnName="Site Number" />
                 <ScalarProperty Name="Business_Name" ColumnName="Business Name" />
                 <ScalarProperty Name="System_Code" ColumnName="System Code" />
+                <ScalarProperty Name="Customer_System_ID" ColumnName="Customer System ID" />
                 <ScalarProperty Name="Inspection_Cycle_Description" ColumnName="Inspection Cycle Description" />
                 <ScalarProperty Name="Last_Inspection_Date" ColumnName="Last Inspection Date" />
                 <ScalarProperty Name="Route_ID" ColumnName="Route ID" />
+                <ScalarProperty Name="Inspection_ID" ColumnName="Inspection ID" />
                 <ScalarProperty Name="Route_Code" ColumnName="Route Code" />
                 <ScalarProperty Name="Active" ColumnName="Active" />
               </ComplexTypeMapping>

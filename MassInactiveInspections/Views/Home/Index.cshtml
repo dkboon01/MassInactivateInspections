@@ -1,13 +1,11 @@
 ﻿@model MassInactiveInspections.Models.CustomerNumber
-@*@model IEnumerable<MassInactiveInspections.Models.CustomerNumber>*@
 @{
     Layout = "~/Views/Shared/_LayoutLogin.cshtml";
-    //ViewBag.Title = "Customer Number";
+    //ViewBag.Title = "Mass Inspection Inactivate";
 }
-
+<h2>@ViewBag.Title</h2>
 @*<script src="http://10.0.0.183:8080/target/target-script-min.js#anonymous"></script>*@
 
-@*@Url.RouteUrl("DefaultApi", new { httproute = "\", controller = \"Account" });*@
 <style>
     #wrap {
         background-color: transparent;
@@ -18,8 +16,6 @@
         display: none;
     }
 </style>
-
-
 
 <div class="container">
     <h2>@ViewBag.Title</h2>
@@ -36,13 +32,15 @@
                     @Html.LabelFor(m => m.customerNum, new { @class = "col-md-4 control-label" })
                     <div class="col-md-4">
                         @Html.TextBoxFor(m => m.customerNum, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.customerNum)
-                        <div> @ViewBag.result </div>
+                        @Html.ValidationMessageFor(m => m.customerNum, null, new { @class = "text-danger" }) 
+                        <div class="text-danger"> @ViewBag.Validation </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="col-md-4 col-md-push-4">
-                        <button type="submit">Submit</button>
+                        <input type="submit" class="btn btn-primary"  name="LostButton" value="Lost" />
+                        <input type="submit" class="btn btn-primary" name="OOBButton" value="OOB" />
+                        <input type="submit" class="btn btn-primary" name="RefusedButton" value="Refused" />
                     </div>
                 </div>
             }

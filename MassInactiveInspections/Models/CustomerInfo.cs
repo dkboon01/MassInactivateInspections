@@ -18,5 +18,6 @@ namespace MassInactiveInspections.Models
         public int? RouteID { get; set; }
         public string RouteCode { get; set; }
         public string Active { get; set; }
+        public bool Selected { get; set; }
     }
 }

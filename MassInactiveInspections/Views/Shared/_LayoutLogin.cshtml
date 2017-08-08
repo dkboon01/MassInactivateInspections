@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Past Due</title>
+    <title>@ViewBag.Title - Mass Inactivate</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <link href="//vjs.zencdn.net/4.11/video-js.css" rel="stylesheet">
@@ -25,37 +25,38 @@
             /*width: 100%;*/
             height: 15px;
         }
+        .navbar {
+            padding-left: 30px;
+            padding-right: 30px;
+        }
     </style>
 </head>
 <body>
-    <div class="navbar-custom navbar-fixed-top">
-
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a href="@Url.Action("Login", "Account")"><img style="margin-top: 5px; margin-bottom: 10px; margin-left:10px" src="@Url.Content("~/Resources/Silco.png")"></a>
-            @*@Html.ActionLink("Home", "Index", "Home", null, new { @class = "navbar-brand" })*@
-        </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav"></ul>
-            @*@Html.Partial("_LoginPartial")*@
-        </div>
-
-    </div>
-    <div class="container body-content">
-        <div id="wrap">
-
-
-            @Html.Partial("_LoginPartial")
-            @RenderBody()
-
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="@Url.Action("Login", "Account")"><img style="margin-top: 5px"; src="@Url.Content("~/Resources/Silco.png")"></a> 
+            </div>
+            <div class="navbar-collapse navbar-right navbar-default">
+                @Html.Partial("_LoginPartial")
+            </div>  
         </div>
     </div>
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+
+        @RenderBody()
+
+    <div class="navbar navbar-fixed-bottom">
+        <p style="background-color: lightgray">
+            <strong> Silco Fire & Security</strong><br />
+            Confidential: The information contained in this website and other internal websites and computer systems is confidential information belonging to Silco Fire & Security.
+            Unauthorized use, reproduction, or dissemination of this information is prohibited. <br />
+            513-733-5655 | silcofs.com| &copy; @DateTime.Now.Year
+        </p>
+    </div>
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@RenderSection("scripts", required: false)
+
 </body>
 </html>
