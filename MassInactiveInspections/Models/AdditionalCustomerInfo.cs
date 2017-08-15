@@ -21,5 +21,6 @@ namespace MassInactiveInspections.Models
         public bool IsSelected { get; set; }
         public int InspectionId { get; set; }
         public string Inspectdesc { get; set; }
+        public string ReasonForLeaving{ get; set; }
     }
 }

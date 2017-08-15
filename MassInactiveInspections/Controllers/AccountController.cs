@@ -105,21 +105,12 @@ namespace MassInactiveInspections.Controllers
                         {
                             foreach (var sc in seclist)
                             {
-                                System.Web.HttpContext.Current.Session["ProcessMassEnact"] = sc.canprocessmassinact;
-                                //System.Web.HttpContext.Current.Session["CanViewProspects"] = sc.canviewprospects.Value;
-                                //System.Web.HttpContext.Current.Session["CanViewSiteLookup"] = sc.canviewmaster.Value;
-                                //System.Web.HttpContext.Current.Session["CanViewPR"] = sc.canviewpr.Value;
-                                //System.Web.HttpContext.Current.Session["CanViewDepts"] = sc.canviewdepts.Value;
-                                
+                                System.Web.HttpContext.Current.Session["ProcessMassEnact"] = sc.canprocessmassinact;                              
                             }
                         }
                         else
                         {
                             System.Web.HttpContext.Current.Session["ProcessMassEnact"] = 0;
-                            //System.Web.HttpContext.Current.Session["CanViewProspects"] = 0;
-                            //System.Web.HttpContext.Current.Session["CanViewSiteLookup"] = 0;
-                            //System.Web.HttpContext.Current.Session["CanViewPR"] = 0;
-                            //System.Web.HttpContext.Current.Session["CanViewDepts"] = 0;
                         }
   
                

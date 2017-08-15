@@ -43,10 +43,10 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    @if (System.Web.HttpContext.Current.Session["ProcessMassInact"].Equals(1))
+                    @*@if (System.Web.HttpContext.Current.Session["ProcessMassInact"].Equals())
                     {
                         <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    }
+                    }*@
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

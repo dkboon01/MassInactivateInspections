@@ -5,15 +5,14 @@
 <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
 <div class="container">
     <h2>@ViewBag.Title</h2>
-    @*<div class="bs-callout bs-callout-info" style="margin-bottom: 0px;">
-    </div>*@
 
-        @using (Html.BeginForm("Lost", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-        {
-            @Html.AntiForgeryToken()
-            <hr />
-            @Html.ValidationSummary(true)
-            <div class="form-group">
+    @using (Html.BeginForm("ViewCustomerInfo", "Home", FormMethod.Post, new { customerList = Model }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        <div class="inspectdtl">
+            <div ng-app="" class="form-group">
                 <table class="table table-bordered" id="inspections">
                     <tr>
                         <th>@Html.CheckBox("CheckAll", false, new { id = "select_all" })</th>
@@ -28,7 +27,6 @@
                         <th>@Html.DisplayNameFor(m => m.additionalCustomerInfoListView.FirstOrDefault().SystemCode)</th>
                         <th>@Html.DisplayNameFor(m => m.additionalCustomerInfoListView.FirstOrDefault().CustomerSystemId)</th>
                         <th>@Html.DisplayNameFor(m => m.additionalCustomerInfoListView.FirstOrDefault().InspectionId)</th>
-
                     </tr>
                     @for (int i = 0; i < Model.additionalCustomerInfoListView.Count; i++)
                     {
@@ -45,7 +43,6 @@
                             <td>@Html.DisplayFor(m => m.additionalCustomerInfoListView[i].SystemCode)</td>
                             <td>@Html.DisplayFor(m => m.additionalCustomerInfoListView[i].CustomerSystemId)</td>
                             <td>@Html.DisplayFor(m => m.additionalCustomerInfoListView[i].InspectionId)</td>
-
                             @Html.HiddenFor(m => m.additionalCustomerInfoListView[i].BusinessName)
                             @Html.HiddenFor(m => m.additionalCustomerInfoListView[i].CustomerName)
                             @Html.HiddenFor(m => m.additionalCustomerInfoListView[i].CustomerNumber)
@@ -58,56 +55,36 @@
                             @Html.HiddenFor(m => m.additionalCustomerInfoListView[i].IsSelected)
                             @Html.HiddenFor(m => m.additionalCustomerInfoListView[i].CustomerSystemId)
                             @Html.HiddenFor(m => m.additionalCustomerInfoListView[i].InspectionId)
+                            @Html.HiddenFor(m => m.additionalCustomerInfoListView[i].ReasonForLeaving)
                         </tr>
                     }
                 </table>
                 <label>Select the competitor that we lost the inspection to:</label>
-                @Html.DropDownListFor(m => m.Selectedcompetitor, new SelectList(Model.competitorslist, "Userdef_8_Code", "Userdef_8_Code", 0), "Please select a competitor")
-                @Html.ValidationMessageFor(m => m.Selectedcompetitor)
-                <div>
+                @Html.DropDownListFor(m => m.Selectedcompetitor, new SelectList(Model.competitorslist, "Userdef_8_Code", "Userdef_8_Code", 0), "Please select a competitor", new { ng_required="true", ng_model= "competitorslist", })
+                <div ng-show="competitorslist == 'Other' || competitorslist == 'Refused'">  
                     <label id="competitorothertxtlbl" style="display:none" name="competitorothertxtlbl" for="competitorothertxt"> Enter another competitor </label>
-                    @Html.TextBoxFor(m => m.competitorothertxt, new { style = "display: none;" })
-                    @Html.ValidationMessageFor(m => m.competitorothertxt)
+                    @Html.TextBoxFor(m => m.competitorothertxt, new { ng_required= "competitorslist == 'Other' || competitorslist == 'Refused'", })
                 </div>
                 <div>
-                    <input type="submit" value="Submit" />
-                </div>
-                <div class="col-md-6 col-xs-6">
-                    <p>If other inspections are listed above, only check the box to mark them LOST if we have lost the KIT and also do the FE or EE.</p>
+                    <input type="submit" value="Submit" class="submit btn-default btn-primary"/>
                 </div>
             </div>
             <br />
             <br />
+            <br />
+            <br />
 
-        }
-</div>
+        </div>
+    }
+    </div>
+
 <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-<script>
-    $('#select_all').click(function () {
-        $('.someClass').prop('checked', this.checked)
-    });
-
-</script>
 
 @section Scripts
 {
+<script src="~/Scripts/angular.js"></script>
     <script type="text/JavaScript">
-        $("#Selectedcompetitor").on("change", function () {
-            if ($("#Selectedcompetitor option:selected").val() === "Other") {
-                $("#competitorothertxt").show();
-            } else {
-                $("#competitorothertxt").hide();
-            }
-        });
-
-        function validate() {
-            if ($('#competitorothertxt').is(':visible')) {
-                if ($('#competitorothertext').val() == "") {
-                    alert('Other Competitor must be fille in')
-                }
-            }
-        }
         $('#select_all').click(function () {
             $('.someClass').prop('checked', this.checked)
         });

@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\broberts\Desktop\0807\MassInactiveInspections\MassInactiveInspections\Cust_Silco.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\broberts\Desktop\Mass Inspections\0810\MassInactiveInspections - Copy - Copy\MassInactiveInspections\Cust_Silco.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

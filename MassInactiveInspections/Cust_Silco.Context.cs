@@ -28,25 +28,13 @@ namespace MassInactiveInspections
         }
     
     
-        public virtual ObjectResult<FindSecurityMassInact_Result> FindSecurityMassInact(Nullable<int> appid, string title, string dept, string account)
+        public virtual ObjectResult<GetCustomerInspectionInformation_Result> GetCustomerInspectionInformation(string customer_Number)
         {
-            var appidParameter = appid.HasValue ?
-                new ObjectParameter("appid", appid) :
-                new ObjectParameter("appid", typeof(int));
+            var customer_NumberParameter = customer_Number != null ?
+                new ObjectParameter("Customer_Number", customer_Number) :
+                new ObjectParameter("Customer_Number", typeof(string));
     
-            var titleParameter = title != null ?
-                new ObjectParameter("title", title) :
-                new ObjectParameter("title", typeof(string));
-    
-            var deptParameter = dept != null ?
-                new ObjectParameter("dept", dept) :
-                new ObjectParameter("dept", typeof(string));
-    
-            var accountParameter = account != null ?
-                new ObjectParameter("account", account) :
-                new ObjectParameter("account", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FindSecurityMassInact_Result>("FindSecurityMassInact", appidParameter, titleParameter, deptParameter, accountParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCustomerInspectionInformation_Result>("GetCustomerInspectionInformation", customer_NumberParameter);
         }
     
         public virtual ObjectResult<GetADGroups_Result> GetADGroups(Nullable<int> pappid)
@@ -67,13 +55,25 @@ namespace MassInactiveInspections
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<DoesCustomerNumberExist_Result>("DoesCustomerNumberExist", customer_NumberParameter);
         }
     
-        public virtual ObjectResult<GetCustomerInspectionInformation_Result> GetCustomerInspectionInformation(string customer_Number)
+        public virtual ObjectResult<FindSecurityMassInact_Result> FindSecurityMassInact(Nullable<int> appid, string title, string dept, string account)
         {
-            var customer_NumberParameter = customer_Number != null ?
-                new ObjectParameter("Customer_Number", customer_Number) :
-                new ObjectParameter("Customer_Number", typeof(string));
+            var appidParameter = appid.HasValue ?
+                new ObjectParameter("appid", appid) :
+                new ObjectParameter("appid", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetCustomerInspectionInformation_Result>("GetCustomerInspectionInformation", customer_NumberParameter);
+            var titleParameter = title != null ?
+                new ObjectParameter("title", title) :
+                new ObjectParameter("title", typeof(string));
+    
+            var deptParameter = dept != null ?
+                new ObjectParameter("dept", dept) :
+                new ObjectParameter("dept", typeof(string));
+    
+            var accountParameter = account != null ?
+                new ObjectParameter("account", account) :
+                new ObjectParameter("account", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<FindSecurityMassInact_Result>("FindSecurityMassInact", appidParameter, titleParameter, deptParameter, accountParameter);
         }
     }
 }

@@ -26,11 +26,8 @@
     <edmx:ConceptualModels>
       <Schema Namespace="Cust_SilcoModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="Cust_SilcoEntities" annotation:LazyLoadingEnabled="true" >
-          <FunctionImport Name="FindSecurityMassInact" ReturnType="Collection(Cust_SilcoModel.FindSecurityMassInact_Result)">
-            <Parameter Name="appid" Mode="In" Type="Int32" />
-            <Parameter Name="title" Mode="In" Type="String" />
-            <Parameter Name="dept" Mode="In" Type="String" />
-            <Parameter Name="account" Mode="In" Type="String" />
+          <FunctionImport Name="GetCustomerInspectionInformation" ReturnType="Collection(Cust_SilcoModel.GetCustomerInspectionInformation_Result)">
+          <Parameter Name="Customer_Number" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="GetADGroups" ReturnType="Collection(Cust_SilcoModel.GetADGroups_Result)">
           <Parameter Name="pappid" Mode="In" Type="Int32" />
@@ -38,19 +35,13 @@
           <FunctionImport Name="DoesCustomerNumberExist" ReturnType="Collection(Cust_SilcoModel.DoesCustomerNumberExist_Result)">
           <Parameter Name="Customer_Number" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="GetCustomerInspectionInformation" ReturnType="Collection(Cust_SilcoModel.GetCustomerInspectionInformation_Result)">
-            <Parameter Name="Customer_Number" Mode="In" Type="String" />
+          <FunctionImport Name="FindSecurityMassInact" ReturnType="Collection(Cust_SilcoModel.FindSecurityMassInact_Result)">
+            <Parameter Name="appid" Mode="In" Type="Int32" />
+            <Parameter Name="title" Mode="In" Type="String" />
+            <Parameter Name="dept" Mode="In" Type="String" />
+            <Parameter Name="account" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
-        <ComplexType Name="FindSecurityMassInact_Result">
-          <Property Type="Int32" Name="canprocessmassinact" Nullable="true" />
-        </ComplexType>
-        <ComplexType Name="GetADGroups_Result">
-          <Property Type="String" Name="adsecuritygroupallowed" Nullable="true" MaxLength="30" />
-        </ComplexType>
-        <ComplexType Name="DoesCustomerNumberExist_Result">
-          <Property Type="Int32" Name="Does_Exist" Nullable="true" />
-        </ComplexType>
         <ComplexType Name="GetCustomerInspectionInformation_Result">
           <Property Type="String" Name="Customer_Number" Nullable="false" MaxLength="15" />
           <Property Type="String" Name="Customer_Name" Nullable="true" MaxLength="60" />
@@ -65,33 +56,21 @@
           <Property Type="String" Name="Route_Code" Nullable="true" MaxLength="25" />
           <Property Type="String" Name="Active" Nullable="true" MaxLength="1" />
         </ComplexType>
+        <ComplexType Name="GetADGroups_Result">
+          <Property Type="String" Name="adsecuritygroupallowed" Nullable="true" MaxLength="30" />
+        </ComplexType>
+        <ComplexType Name="DoesCustomerNumberExist_Result">
+          <Property Type="Int32" Name="Does_Exist" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="FindSecurityMassInact_Result">
+          <Property Type="Int32" Name="canprocessmassinact" Nullable="true" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="Cust_SilcoModelStoreContainer" CdmEntityContainer="Cust_SilcoEntities" >
-          <FunctionImportMapping FunctionImportName="FindSecurityMassInact" FunctionName="Cust_SilcoModel.Store.FindSecurityMassInact" >
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="Cust_SilcoModel.FindSecurityMassInact_Result">
-                <ScalarProperty Name="canprocessmassinact" ColumnName="canprocessmassinact" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="GetADGroups" FunctionName="Cust_SilcoModel.Store.GetADGroups" >
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="Cust_SilcoModel.GetADGroups_Result">
-                <ScalarProperty Name="adsecuritygroupallowed" ColumnName="adsecuritygroupallowed" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="DoesCustomerNumberExist" FunctionName="Cust_SilcoModel.Store.DoesCustomerNumberExist" >
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="Cust_SilcoModel.DoesCustomerNumberExist_Result">
-                <ScalarProperty Name="Does_Exist" ColumnName="Does Exist" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="GetCustomerInspectionInformation" FunctionName="Cust_SilcoModel.Store.GetCustomerInspectionInformation">
             <ResultMapping>
               <ComplexTypeMapping TypeName="Cust_SilcoModel.GetCustomerInspectionInformation_Result">
@@ -107,6 +86,27 @@
                 <ScalarProperty Name="Inspection_ID" ColumnName="Inspection ID" />
                 <ScalarProperty Name="Route_Code" ColumnName="Route Code" />
                 <ScalarProperty Name="Active" ColumnName="Active" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="GetADGroups" FunctionName="Cust_SilcoModel.Store.GetADGroups">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Cust_SilcoModel.GetADGroups_Result">
+                <ScalarProperty Name="adsecuritygroupallowed" ColumnName="adsecuritygroupallowed" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="DoesCustomerNumberExist" FunctionName="Cust_SilcoModel.Store.DoesCustomerNumberExist">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Cust_SilcoModel.DoesCustomerNumberExist_Result">
+                <ScalarProperty Name="Does_Exist" ColumnName="Does Exist" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="FindSecurityMassInact" FunctionName="Cust_SilcoModel.Store.FindSecurityMassInact">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Cust_SilcoModel.FindSecurityMassInact_Result">
+                <ScalarProperty Name="canprocessmassinact" ColumnName="canprocessmassinact" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

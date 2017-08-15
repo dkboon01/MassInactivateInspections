@@ -92,7 +92,10 @@ namespace MassInactiveInspections
 
             foreach (string group in _permittedGroups)
             {
-                if (user.IsMemberOf(GroupPrincipal.FindByIdentity(ctx, group))) return true;
+                if (user.IsMemberOf(GroupPrincipal.FindByIdentity(ctx, group)))
+                {
+                    return true;
+                }
             }
 
             return false;
@@ -147,23 +150,6 @@ namespace MassInactiveInspections
             {
                 return string.Empty;
             }
-               //     return user;
-               // Check that the user is in a group with permissions to access application
-               //      PrincipalContext ctx = new PrincipalContext(ContextType.Domain, "silcofireprotection.com");
-
-            //    UserPrincipal user = UserPrincipal.FindByIdentity(ctx, userName);
-
-            //    user.EmailAddress
-
-            //foreach (string group in _permittedGroups)
-            //{
-            //    if (user.IsMemberOf(GroupPrincipal.FindByIdentity(ctx, group))) return true;
-            //}
-
-
-            //  return " ";
-
-
         }
         public string HasEmail(string userName, string password)
         {
@@ -204,23 +190,6 @@ namespace MassInactiveInspections
             {
                 return string.Empty;
             }
-            //     return user;
-            // Check that the user is in a group with permissions to access application
-            //      PrincipalContext ctx = new PrincipalContext(ContextType.Domain, "silcofireprotection.com");
-
-            //    UserPrincipal user = UserPrincipal.FindByIdentity(ctx, userName);
-
-            //    user.EmailAddress
-
-            //foreach (string group in _permittedGroups)
-            //{
-            //    if (user.IsMemberOf(GroupPrincipal.FindByIdentity(ctx, group))) return true;
-            //}
-
-
-            //  return " ";
-
-
         }
         public string HasDisplayName(string userName, string password)
         {
@@ -242,15 +211,11 @@ namespace MassInactiveInspections
                 search.PropertiesToLoad.Add("displayname");
 
                 SearchResult result = search.FindOne();
-                //    GetProperty(result.AD)
-                //  result.GetDirectoryEntry();
-                //  result.Properties.de
+
                 if (result.Properties.Contains("displayname"))
                 {
-                    //string dpt = result.Properties["mail"][0].ToString();
                     string dspname = result.Properties["displayname"][0].ToString();
             
-                    // string dpt = result.Properties.Contains("Department");
                     return dspname;
                 }
                 else

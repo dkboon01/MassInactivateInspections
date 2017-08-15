@@ -16,10 +16,9 @@ using System.Data.SqlClient;
 
 namespace MassInactiveInspections.Controllers
 {
-
+    
     public class HomeController : Controller
     {
-
         public ActionResult Index()
         {
             return View();
@@ -27,6 +26,8 @@ namespace MassInactiveInspections.Controllers
         [HttpPost]
         public ActionResult CheckForNumber(CustomerNumber customerNumber, string LostButton, string OOBButton, string RefusedButton)
         {
+            var lstButtons = new List<string> { LostButton, OOBButton, RefusedButton };
+            string strSelectedButton = GetReasonForLeaving(lstButtons);
 
             string strResult = string.Empty;
             var result = Helper.ExistingCustomerNumber<DoesCustomerNumberExist_Result>(customerNumber.customerNum.ToString());
@@ -47,7 +48,8 @@ namespace MassInactiveInspections.Controllers
                 {
                     foreach (var customer in results)
                     {
-                        customerlist.additionalCustomerInfoListView.Add(new AdditionalCustomerInfo() {
+                        customerlist.additionalCustomerInfoListView.Add(new AdditionalCustomerInfo()
+                        {
                             Active = customer.Active,
                             BusinessName = customer.Business_Name,
                             CustomerName = customer.Customer_Name,
@@ -60,9 +62,11 @@ namespace MassInactiveInspections.Controllers
                             SystemCode = customer.System_Code,
                             CustomerSystemId = customer.Customer_System_ID,
                             IsSelected = false,
-                            InspectionId = customer.Inspection_ID });
+                            InspectionId = customer.Inspection_ID,
+                            ReasonForLeaving = strSelectedButton,
+                    });
                     }
-                    customerlist.competitorslist = GetCompetitors(LostButton, OOBButton, RefusedButton);
+                    customerlist.competitorslist = GetCompetitors(lstButtons);
                 }
                 else
                 {
@@ -72,120 +76,190 @@ namespace MassInactiveInspections.Controllers
             }
             else
             {
-               return View("Index");
+                return View("Index");
             }
             return View("ViewCustomerInfo", customerlist);
         }
-        [HttpPost]
-        public ActionResult ViewCustomerInfo(AdditionalCustomerInfoList customerInfoList)
+
+        private static string GetReasonForLeaving(List<string> lstButtons)
         {
-            return View("SelectedInspections", (object)customerInfoList);
+            var strSelectedButton = string.Empty;
+
+            if (lstButtons.Contains("Lost")) { strSelectedButton = "Lost"; }
+            else if (lstButtons.Contains("OOB")) { strSelectedButton = "OOB"; }
+            else { strSelectedButton = "Refused"; }
+
+            return strSelectedButton;
         }
 
         [HttpPost]
-        public ActionResult Lost(AdditionalCustomerInfoList customerInfoLis)
+        public ActionResult ViewCustomerInfo(AdditionalCustomerInfoList customerList)
         {
-            int cstsystemid = Convert.ToInt32(customerInfoLis.additionalCustomerInfoListView.FirstOrDefault().CustomerSystemId);
-            //int cstinspectionid = Convert.ToInt32(ticketmodel.apit.InspectionId);
-            string competitorsel = customerInfoLis.Selectedcompetitor;
-            string competitorothertxt = customerInfoLis.competitorothertxt;
-            //int ticketid = ticketmodel.apit.ServiceTicketId;
-
-            SuccessFailViewModel sf = new SuccessFailViewModel();
-            sf.CustomerNumber = customerInfoLis.additionalCustomerInfoListView.FirstOrDefault().CustomerNumber;
             bool success = false;
-            // a) Update the customer system userdef record with "Lost" competitor informatoin 
-            try
-            {
-                success = UpdARCustomerSystemUserDef(cstsystemid, competitorsel, competitorothertxt);
-            }
-            catch
-            {
-                success = false;
-            }
+            List<string> lstrButton = new List<string> {};
+            SuccessFailViewModel sf = new SuccessFailViewModel();
+            string strCompetitor = string.Empty;
 
-            if (success)
-            {   // b) update the inspection 
-                try
+            if (ModelState.IsValid)
+            {
+                foreach (var item in customerList.additionalCustomerInfoListView)
                 {
-                    //************6/8 dkb
-                    success = UpdInspection(customerInfoLis.additionalCustomerInfoListView.FirstOrDefault().InspectionId);
-
-                    if (success)
+                    if (item.IsSelected)
                     {
-                                    success = UpdEditLog(customerInfoLis.additionalCustomerInfoListView.FirstOrDefault().InspectionCycleDescription, competitorsel, "Lost", customerInfoLis.additionalCustomerInfoListView.FirstOrDefault().SiteNumber, customerInfoLis.additionalCustomerInfoListView.FirstOrDefault().CustomerNumber, customerInfoLis.additionalCustomerInfoListView.FirstOrDefault().SystemCode);
-                        //            //Part 2. check to see if any other checkbox for inspections is true then process them
-                        //            // checking to make sure there are other inspections
-                        //            if (ticketmodel.sysinsp != null && ticketmodel.sysinsp.Any())
-                        //            {
-                        //                foreach (SearchInspections insp in ticketmodel.sysinsp)
-                        //                {
-                        //                    if (insp.IsSelected == true)  //is an inspection selected
-                        //                    {
-                        //                        if (ticketmodel.apit.InspectionId != insp.inspectionid)    // make sure we have not already updated the inspection
-                        //                        {
-                        //                            try
-                        //                            {
-                        //                                success = UpdARCustomerSystemUserDef(insp.customer_system_id, competitorsel, competitorothertxt);
-                        //                                try
-                        //                                {
-                        //                                    success = UpdInspection(insp.inspectionid);
-                        //                                    try
-                        //                                    {
-                        //                                        success = UpdEditLog(insp.inspcycldesc, competitorsel, "Lost", ticketmodel.apit.Site.SiteNumber, ticketmodel.apit.Customer.CustomerNumber, insp.syscode);
-                        //                                    }
-                        //                                    catch
-                        //                                    {
-                        //                                        success = false;
-                        //                                    }
+                        int cstsystemid = Convert.ToInt32(item.CustomerSystemId);
+                        string competitorsel = customerList.Selectedcompetitor;
 
-                        //                                }
-                        //                                catch
-                        //                                {
-                        //                                    success = false;
-                        //                                }
-
-                        //                            }
-
-                        //                            catch
-                        //                            {
-                        //                                success = false;
-                        //                            }
-                        //                        }
-
-
-                        //                    }
-
-                        //                }
-                        //            }
-                        //            else
-                        //            {
-                        //                success = true;
-                        //            }
-                    }
-                    else
-                                {
-                            success = false;
+                        // Select Competitor for the log.
+                        if (customerList.Selectedcompetitor == "Refused" || customerList.Selectedcompetitor == "Other")
+                        {
+                            strCompetitor = customerList.competitorothertxt;
                         }
-                    }
+                        else
+                        {
+                            strCompetitor = customerList.Selectedcompetitor;
+                        }
+
+                        string competitorothertxt = customerList.competitorothertxt;
+
+                        sf.CustomerNumber = item.CustomerNumber;
+
+                        // a) Update the customer system userdef record with "Lost" competitor informatoin 
+                        try
+                        {
+                            success = UpdARCustomerSystemUserDef(cstsystemid, competitorsel, competitorothertxt);
+                        }
                         catch
                         {
                             success = false;
                         }
-            
+
+                        if (success)
+                        {   // b) update the inspection 
+                            try
+                            {
+                                //************6/8 dkb
+                                success = UpdInspection(item.InspectionId);
+
+                                if (success)
+                                {
+                                    success = UpdEditLog(item.InspectionCycleDescription, strCompetitor, item.ReasonForLeaving, item.SiteNumber, item.CustomerNumber, item.SystemCode);
+                                    //            //Part 2. check to see if any other checkbox for inspections is true then process them
+                                    //            // checking to make sure there are other inspections
+                                    success = GetInspectionData(customerList, success, item, competitorsel, competitorothertxt);
+                                }
+                                else
+                                {
+                                    success = false;
+                                }
+                            }
+                            catch
+                            {
+                                success = false;
+                            }
+
+                        }
+
+                    }
                 }
-            if (success)
-            {
-                return View("Success", sf);
+
+                if (success)
+                {
+                    return View("Success", sf);
+                }
+                else
+                {
+                    return View("Failed", sf);
+                }
             }
             else
             {
-                return View("Failed", sf);
+                lstrButton = GetSelectedButtons(customerList.additionalCustomerInfoListView[0].ReasonForLeaving);
+                customerList.competitorslist = GetCompetitors(lstrButton);
+                return View("ViewCustomerInfo", customerList);
             }
-            
+
         }
 
-        private static List<Competitors> GetCompetitors(string LostButton, string OOBButton, string RefusedButton)
+        private static List<string> GetSelectedButtons(string strButton)
+        {
+            List<string> returnStrings = new List<string>();
+            switch (strButton)
+            {
+                case "Lost":
+                    returnStrings.Add("Lost");
+                    returnStrings.Add(null);
+                    returnStrings.Add(null);
+                    break;
+                case "OOB":
+                    returnStrings.Add(null);
+                    returnStrings.Add("OOB");
+                    returnStrings.Add(null);
+                    break;
+                case "Refused":
+                    returnStrings.Add(null);
+                    returnStrings.Add(null);
+                    returnStrings.Add("Refused");
+                    break;
+                default:
+                    break;
+            }
+
+            return returnStrings;
+        }
+
+        private static bool GetInspectionData(AdditionalCustomerInfoList customerInfoList, bool success, AdditionalCustomerInfo item, string competitorsel, string competitorothertxt)
+        {
+            if (customerInfoList.sysinsp != null && customerInfoList.sysinsp.Any())
+            {
+                foreach (SearchInspections insp in customerInfoList.sysinsp)
+                {
+                    if (insp.IsSelected == true)  //is an inspection selected
+                    {
+                        if (item.InspectionId != insp.inspectionid)    // make sure we have not already updated the inspection
+                        {
+                            try
+                            {
+                                success = UpdARCustomerSystemUserDef(insp.customer_system_id, competitorsel, competitorothertxt);
+                                try
+                                {
+                                    success = UpdInspection(insp.inspectionid);
+                                    try
+                                    {
+                                        success = UpdEditLog(insp.inspcycldesc, competitorsel, "Lost", item.SiteNumber, item.CustomerNumber, insp.syscode);
+                                    }
+                                    catch
+                                    {
+                                        success = false;
+                                    }
+
+                                }
+                                catch
+                                {
+                                    success = false;
+                                }
+
+                            }
+
+                            catch
+                            {
+                                success = false;
+                            }
+                        }
+
+
+                    }
+
+                }
+            }
+            else
+            {
+                success = true;
+            }
+
+            return success;
+        }
+
+        private static List<Competitors> GetCompetitors(List<string> lstrButtons)
         {
 
             List<Competitors> comp = new List<Competitors>();
@@ -231,7 +305,7 @@ namespace MassInactiveInspections.Controllers
                     var compl = comp.ToList();
                     foreach (var c in comp)
                     {
-                        if (LostButton != null)   //Lost Button  - competitor list does not neeed OOB or Refused 
+                        if (lstrButtons[0] != null)   //Lost Button  - competitor list does not neeed OOB or Refused 
                         {
                             if (!c.Description.Contains("N/A") && !c.Description.Contains("OOB") && !c.Description.Contains("Refused") && !c.Inactive.Contains("Y"))
                             {
@@ -240,7 +314,7 @@ namespace MassInactiveInspections.Controllers
                         }
 
                         else
-                            if (OOBButton != null)
+                            if (lstrButtons[1] != null)
                         {
                             if (c.Description.Contains("OOB - Not Confirmed"))  // only show the OOB not confirmed
                             {
@@ -248,9 +322,9 @@ namespace MassInactiveInspections.Controllers
                             }
                         }
                         else
-                                if (RefusedButton != null)  // only show Refused  d 
+                                if (lstrButtons[2] != null)  // only show Refused  d 
                         {
-                            if (c.Description.Contains("OOB"))
+                            if (c.Description.Contains("Refused"))
                             {
                                 complist.Add(c);
                             }
@@ -280,12 +354,12 @@ namespace MassInactiveInspections.Controllers
             //Prepare the request 
             CredentialCache credentialCache = new CredentialCache();
 
-            credentialCache.Add(new Uri("https://testsedoffapi.silcofs.com"), "Basic", new NetworkCredential(username, password));
+            credentialCache.Add(new Uri("https://sedoffapi.silcofs.com"), "Basic", new NetworkCredential(username, password));
 
 
             string uri;
 
-            uri = "https://testsedoffapi.silcofs.com/api/CustomerSystemUserdef/" + systemid;
+            uri = "https://sedoffapi.silcofs.com/api/CustomerSystemUserdef/" + systemid;
 
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
@@ -347,9 +421,9 @@ namespace MassInactiveInspections.Controllers
             //Prepare the request 
             CredentialCache credentialCache = new CredentialCache();
 
-            //  string uri = "https://testsilcosedonacustomapi/api/SV_Inspection/" + inspectionid;
+            //  string uri = "https://silcosedonacustomapi/api/SV_Inspection/" + inspectionid;
 
-            string uri = "https://testsilcosedonacustomapi.silcofs.com/api/SV_Inspection/";
+            string uri = "https://silcosedonacustomapi.silcofs.com/api/SV_Inspection/";
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
             string authInfo = ConfigurationManager.AppSettings["apilgusrin"] + ":" + ConfigurationManager.AppSettings["apilgusrps"];
             authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
@@ -418,7 +492,7 @@ namespace MassInactiveInspections.Controllers
 
             string uri;
 
-            uri = "https://testsilcosedonacustomapi.silcofs.com/api/EditLog/";
+            uri = "https://silcosedonacustomapi.silcofs.com/api/EditLog/";
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
             request.AllowAutoRedirect = true;
@@ -448,6 +522,64 @@ namespace MassInactiveInspections.Controllers
                 success = true;
             }
             return success;
+        }
+
+        private static List<SearchInspections> SearchInspection(int siteid, int servcomp)
+        {
+            // SearchInspections j = new SearchInspections();
+            List<SearchInspections> inspcont = new List<SearchInspections>();
+            // string environment = ConfigurationManager.AppSettings["environment"];
+
+
+
+            Byte[] documentBytes;  //holds the post body information in bytes
+
+
+            string uri = "https://silcosedonacustomapi.silcofs.com/api/search?siteid=" + siteid + "&servcomp=" + servcomp;
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+
+
+            string authInfo = ConfigurationManager.AppSettings["apilgusrin"] + ":" + ConfigurationManager.AppSettings["apilgusrps"];
+            authInfo = Convert.ToBase64String(Encoding.Default.GetBytes(authInfo));
+            request.Headers["Authorization"] = "Basic " + authInfo;
+
+
+            // HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+            request.AllowAutoRedirect = true;
+            request.PreAuthenticate = true;
+
+            request.AutomaticDecompression = DecompressionMethods.GZip;
+
+            request.Method = "GET";
+            request.ContentType = "text/json";
+
+            //Call store proc for the information for a user 
+            string body = "";
+            // string ticketno;
+
+            System.Text.ASCIIEncoding obj = new System.Text.ASCIIEncoding();
+            documentBytes = obj.GetBytes(body); //convert string to bytes
+            request.ContentLength = documentBytes.Length;
+
+
+            HttpWebResponse responsemsg = (HttpWebResponse)request.GetResponse();
+            if (responsemsg.StatusCode == HttpStatusCode.OK)
+            {
+                // success = true;
+
+
+                using (StreamReader reader = new StreamReader(responsemsg.GetResponseStream()))
+                {
+                    var responsedata = reader.ReadToEnd();
+                    inspcont = JsonConvert.DeserializeObject<List<SearchInspections>>(responsedata);
+
+                    // System.Diagnostics.Debug.Write(responsedata);
+
+
+                }
+
+            }
+            return inspcont;
         }
     }
 }
