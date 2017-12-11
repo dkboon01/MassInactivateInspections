@@ -142,7 +142,7 @@ namespace MassInactiveInspections.Controllers
 
                                 if (success)
                                 {
-                                    success = UpdEditLog(item.InspectionCycleDescription, strCompetitor, item.ReasonForLeaving, item.SiteNumber, item.CustomerNumber, item.SystemCode);
+                                    success = UpdEditLog(item.InspectionCycleDescription, strCompetitor, item.ReasonForLeaving, item.SiteNumber, item.CustomerNumber, item.SystemCode, item.RouteID, item.InspectionId);
                                     //            //Part 2. check to see if any other checkbox for inspections is true then process them
                                     //            // checking to make sure there are other inspections
                                     success = GetInspectionData(customerList, success, item, competitorsel, competitorothertxt);
@@ -225,7 +225,7 @@ namespace MassInactiveInspections.Controllers
                                     success = UpdInspection(insp.inspectionid);
                                     try
                                     {
-                                        success = UpdEditLog(insp.inspcycldesc, competitorsel, "Lost", item.SiteNumber, item.CustomerNumber, insp.syscode);
+                                        success = UpdEditLog(insp.inspcycldesc, competitorsel, "Lost", item.SiteNumber, item.CustomerNumber, insp.syscode, item.RouteID, item.InspectionId);
                                     }
                                     catch
                                     {
@@ -373,7 +373,7 @@ namespace MassInactiveInspections.Controllers
             request.ContentType = "application/json";
 
             //Call store proc for the information for a user 
-            string body = "{\"CustomerSystemId\":" + systemid.ToString() + ",\"Table8Code\": \"" + competitortxt + "\" " + ",\"Text4\" : \"" + competitorothertxt + "\"" + ",\"Date2\" : \"" + DateTime.Today.ToString() + "\"}";
+            string body = "{\"CustomerSystemId\":" + systemid.ToString() + ",\"Table8Code\": \"" + competitortxt + "\" " + ",\"Text4\" : \"" + competitorothertxt + "\"}";
             // string ticketno;
 
 
@@ -432,8 +432,6 @@ namespace MassInactiveInspections.Controllers
             request.PreAuthenticate = true;
             request.Credentials = credentialCache;
             request.AutomaticDecompression = DecompressionMethods.GZip;
-
-
             request.Method = "PUT";
             request.ContentType = "application/json";
 
@@ -454,11 +452,7 @@ namespace MassInactiveInspections.Controllers
 
             }
 
-
-
             System.Text.ASCIIEncoding obj = new System.Text.ASCIIEncoding();
-
-
 
             try
             {
@@ -466,7 +460,6 @@ namespace MassInactiveInspections.Controllers
                 if ((responsemsg.StatusCode == HttpStatusCode.OK) || (responsemsg.StatusCode == HttpStatusCode.NoContent))
                 {
                     success = true;
-
                 }
                 else
                 {
@@ -476,16 +469,14 @@ namespace MassInactiveInspections.Controllers
             catch
             {
                 success = false;
-
-
             }
-
             return success;
         }
 
-        private static bool UpdEditLog(string inspcycledesc, string competitor, string action, string siteno, string customernumber, string systemcode)
+        private static bool UpdEditLog(string inspcycledesc, string competitor, string action, string siteno, string customernumber, string systemcode, int? routeid, int inspectionid)
         {
             string puser = System.Web.HttpContext.Current.Session["sessionLoginName"].ToString();
+            string sysmsg = "Web API " + "Mass Inactivation";
 
             bool success = false;
 
@@ -509,7 +500,11 @@ namespace MassInactiveInspections.Controllers
             {
                 //STOPPED NOT RETURNING A RESPONSE 
 
-                string edtlg = "{\"user\" : \"" + puser + "\"" + ", \"inspectiontype\": \"" + inspcycledesc + "\"" + ", \"systemcode\": \"" + systemcode + "\"" + ", \"sitecode\": \"" + siteno + "\"" + ", \"action\": \"" + action + "\"" + ", \"code\": \"" + competitor + "\"" + ", \"customernumber\": \"" + customernumber + "\"" + "}";
+                string edtlg = "{\"user\" : \"" + puser + "\"" + ", \"inspectiontype\": \"" + inspcycledesc + "\"" + ", \"systemcode\": \"" 
+                                                + systemcode + "\"" + ", \"sitecode\": \"" + siteno + "\"" + ", \"action\": \"" + action + "\"" 
+                                                + ", \"code\": \"" + competitor + "\"" + ", \"customernumber\": \"" + customernumber + "\"" 
+                                                +", \"routeid\": \"" + routeid + "\"" + ", \"inspectionid\": \"" + inspectionid + "\"" 
+                                                + ", \"sysmsg\": \"" + sysmsg + "\"" + "}";
 
                 streamWriter.Write(edtlg);
                 streamWriter.Flush();
